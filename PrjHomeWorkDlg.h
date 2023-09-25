@@ -9,7 +9,9 @@
 class CPrjHomeWorkDlg : public CDialogEx
 {
 
-// User Function
+/*======================================
+User Function
+======================================*/
 protected:
 
 private:
@@ -19,6 +21,8 @@ private:
 	void InitDlg();
 	void UpdateDisplay();
 	BOOL ReleaseDlg();
+	BOOL isValidRect(CRect & rect, int nImagePosY);
+
 public:
 
 // 생성입니다.

@@ -107,9 +107,12 @@ BOOL CPrjHomeWorkDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-
+	/*======================================
+	Dlg 초기화 함수 호출 
+	======================================*/
 	InitDlg();
+
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -162,53 +165,88 @@ HCURSOR CPrjHomeWorkDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
+/*======================================
+프로그램 시작 시 초기화 시켜주는 함수 
+======================================*/
 void CPrjHomeWorkDlg::InitDlg()
 {
 	CRect rect;
 	GetDlgItem(IDC_GROUP)->GetWindowRect(&rect);
 	m_nImagePosY = rect.Height() + 10;
 
-	MoveWindow(0, 0, IMG_WIDTH, IMG_HEIGHT + 150);
+	MoveWindow(0, 0, IMG_WIDTH+ 20, IMG_HEIGHT + 150);
 }
 
+/*======================================
+원형이 그려질 Rect인지 아닌지 판단. 
+======================================*/
+BOOL CPrjHomeWorkDlg::isValidRect(CRect& rect, int nImagePosY)
+{
+	BOOL bRet = FALSE;
+
+	if (rect.bottom <= IMG_HEIGHT + nImagePosY &&
+		rect.top >= nImagePosY &&
+		rect.right <= IMG_WIDTH &&
+		rect.left >= 0)
+
+		bRet = TRUE;
+
+	return bRet;
+}
+
+/*======================================
+설정된 반지름, 개수에 맞게 원형을 그리는 함수 
+======================================*/
 void CPrjHomeWorkDlg::UpdateDisplay()
 {
 	CClientDC dc(this);
 	int nRadius;
-	int nMakeCnt;
+	int nDrawCnt=0;
 	int k, nTempX, nTempY;
+	int nMakeCnt = 0;	
 
-	if (m_image)
-		m_image.Draw(dc, 0, m_nImagePosY);
+	//if (m_image)
+	//	m_image.Draw(dc, 0, m_nImagePosY);
 
 	UpdateData(TRUE);
+
 	nRadius = m_Ctl_nRadius;
 	nMakeCnt = m_Ctl_nMakeCnt;
+	
+	CPen myYellowPen(PS_SOLID, 3, RGB(255, 255, 0)); // 노란색 펜 생성
+	CPen* pOldYellowPen = dc.SelectObject(&myYellowPen);
+	CPen myBlackYPen(PS_SOLID, 3, RGB(0, 0, 0)); // 블랙 펜 생성	
+	CPen* pOldBlackPen = dc.SelectObject(&myBlackYPen);
 
-	// 노란색 테두리의 원.
-	CPen pen(PS_SOLID, 2, RGB(255, 255, 0)); // 노란색 펜 생성
-
-	CPen* pOldPen = dc.SelectObject(&pen);
-
-	for (k = 0; k < nMakeCnt; k++)
+	while (nDrawCnt < nMakeCnt)
 	{
 		nTempX = rand() % IMG_WIDTH;
 		nTempY = rand() % IMG_HEIGHT;
 		nTempY += m_nImagePosY;
+		
+		CRect ValidRect(nTempX - nRadius, nTempY - nRadius, nTempX + nRadius, nTempY + nRadius);
 
-		dc.Ellipse(nTempX - nRadius, nTempY - nRadius, nTempX + nRadius, nTempY + nRadius);
-		dc.SelectObject(pOldPen);
+		if (isValidRect(ValidRect, m_nImagePosY) )
+		{
+			dc.SelectObject(pOldBlackPen);
+			dc.Ellipse(nTempX - nRadius, nTempY - nRadius, nTempX + nRadius, nTempY + nRadius);
 
-		// 중심에 "+" 기호 .
-		dc.MoveTo(nTempX - MARK_LEN, nTempY);
-		dc.LineTo(nTempX + MARK_LEN, nTempY);
-		dc.MoveTo(nTempX, nTempY - MARK_LEN);
-		dc.LineTo(nTempX, nTempY + MARK_LEN);
-	}
+			/* 중심에 "+" 기호, 다시 검은색으로 */
+			dc.SelectObject(pOldYellowPen);
+			dc.MoveTo(nTempX - (MARK_LEN-1), nTempY);
+			dc.LineTo(nTempX + MARK_LEN, nTempY);
+			dc.MoveTo(nTempX, nTempY - (MARK_LEN-1));
+			dc.LineTo(nTempX, nTempY + MARK_LEN);
 
+			nDrawCnt++;
+		}		
+	}	
 }
 
+/*======================================
+종료 시 동적 할당된 메모리가 존재 할 경우나,
+종료 설정이 필요할 경우 호출 되는 함수
+======================================*/
 BOOL CPrjHomeWorkDlg::ReleaseDlg()
 {
 	BOOL bRet = FALSE;
@@ -216,13 +254,14 @@ BOOL CPrjHomeWorkDlg::ReleaseDlg()
 	if (IDYES == AfxMessageBox(_T("프로그램을 종료 하시겠습니까?"), MB_YESNO))
 		bRet = TRUE;
 
-	/* ========================================================
-	필요할 경우 동적 생성 변수를 제거한다
-	==========================================================*/
+	//필요할 경우 동적 생성 변수를 제거한다
+	
 	return bRet;
-
 }
 
+/*======================================
+생성 버튼 클릭 시 
+======================================*/
 void CPrjHomeWorkDlg::OnBnClickedBtnMake()
 {
 	int nPitch = 0;
@@ -241,6 +280,9 @@ void CPrjHomeWorkDlg::OnBnClickedBtnMake()
 	UpdateDisplay();
 }
 
+/*======================================
+종료 버튼 클릭 시
+======================================*/
 void CPrjHomeWorkDlg::OnBnClickedBtnClose()
 {
 	if (ReleaseDlg())
