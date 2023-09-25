@@ -117,7 +117,6 @@ BOOL CPrjHomeWorkDlg::OnInitDialog()
 	======================================*/
 	InitDlg();
 
-
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -180,9 +179,13 @@ void CPrjHomeWorkDlg::InitDlg()
 	GetDlgItem(IDC_GROUP)->GetWindowRect(&rect);
 	m_nImagePosY = rect.Height() ;
 
+	/* 생성 결과 초기는 0*/
 	GetDlgItem(IDC_STATIC_CNT)->SetWindowText(_T("0"));
 
+	/* Dlg 사이즈 변경 */
 	MoveWindow(0, 0, IMG_WIDTH+ DLG_BLANK, IMG_HEIGHT + (m_nImagePosY *2));
+
+	/*Cimage초기화*/
 	InitImageCls();
 }
 /*======================================
@@ -261,12 +264,10 @@ void CPrjHomeWorkDlg::drawCircle(int x, int y, int nRadius)
 }
 
 /*=====================================
-m_image  버퍼를 이용한 원 그리기
+m_image  원을 생성한다.
 ======================================*/
 void CPrjHomeWorkDlg::MakeCircle()
 {	
-	int nGray = 0xFF;	
-	
 	int nRadius;
 	int nDrawCnt = 0;
 	int nTempX, nTempY;
@@ -317,7 +318,7 @@ BOOL CPrjHomeWorkDlg::InitImageCls()
 	{
 		static RGBQUAD rgb[256];
 		for (int i = 0; i < 256; i++)
-			rgb[i].rgbRed = rgb[i].rgbGreen = rgb[i].rgbBlue = i;
+			rgb[i].rgbRed = rgb[i].rgbGreen = rgb[i].rgbBlue = (BYTE)i;
 		m_image.SetColorTable(0, 256, rgb);
 
 		nPitch = m_image.GetPitch();
@@ -329,7 +330,9 @@ BOOL CPrjHomeWorkDlg::InitImageCls()
 		memset(fm, 0x00, IMG_WIDTH * IMG_HEIGHT);
 	else
 		bRet = FALSE;
-
+	
+	UpdateDisplay();
+	
 	return bRet;
 }
 /*======================================
@@ -382,16 +385,14 @@ void CPrjHomeWorkDlg::OnBnClickedBtnMake()
 		return;
 	}
 
-
 	if (nMakeCnt > MAX_MAKE_CNT) {
 		strMsg.LoadStringW(IDS_STR_MAX_NUM);
 		AfxMessageBox(strMsg);
 		return;
 	}
-
+	
 	if (InitImageCls())
-	{
-		UpdateDisplay();
+	{		
 		MakeCircle();
 	}	
 }
@@ -409,7 +410,13 @@ Cimage 저장
 void CPrjHomeWorkDlg::OnBnClickedBtnSave()
 {
 	CString g_strFileImage = _T(".\\save.bmp");
+	CString strMsg, strMsg2;
 
-	if(m_image)
+	if (m_image) {
+		strMsg.LoadStringW(IDS_STR_SAVE);
+		strMsg2.Format(_T("%s %s"), g_strFileImage, strMsg);
 		m_image.Save(g_strFileImage);
+		AfxMessageBox(strMsg2);
+	}
+		
 }

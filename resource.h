@@ -18,6 +18,8 @@
 #define IDS_STR_MIN_NUM                 10002
 #define IDS_STR_MAX_NUM                 10003
 #define IDS_STR_MAX_RADIUS              10004
+#define IDS_STRING10005                 10005
+#define IDS_STR_SAVE                    10005
 
 // Next default values for new objects
 // 
