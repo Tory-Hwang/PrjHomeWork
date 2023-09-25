@@ -12,6 +12,12 @@
 #define IDC_E_RADIUS                    1002
 #define IDC_E_MAKECNT                   1003
 #define IDC_GROUP                       1004
+#define IDC_BTN_SAVE                    1005
+#define IDC_STATIC_CNT                  1006
+#define IDS_STR_CLOSE                   10001
+#define IDS_STR_MIN_NUM                 10002
+#define IDS_STR_MAX_NUM                 10003
+#define IDS_STR_MAX_RADIUS              10004
 
 // Next default values for new objects
 // 
@@ -19,7 +25,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

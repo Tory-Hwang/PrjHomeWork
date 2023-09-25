@@ -16,12 +16,17 @@ protected:
 
 private:
 	CImage m_image;
-	int m_nImagePosY = 0;
+	int m_nImagePosY = 0;	
 
 	void InitDlg();
+	BOOL InitImageCls();
+	void MakeCircle();	
+
 	void UpdateDisplay();
 	BOOL ReleaseDlg();
-	BOOL isValidRect(CRect & rect, int nImagePosY);
+	BOOL isValidRect(CRect & rect);
+	void drawCircle(int x, int y, int nRadius);
+	void CountDisplay(int Cnt);
 
 public:
 
@@ -53,4 +58,5 @@ public:
 	int m_Ctl_nMakeCnt;
 	afx_msg void OnBnClickedBtnClose();
 	afx_msg void OnBnClickedBtnMake();
+	afx_msg void OnBnClickedBtnSave();
 };
