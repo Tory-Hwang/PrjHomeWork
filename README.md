@@ -20,5 +20,5 @@
 - PrjHomeWorkDlg.h : 프로젝트 헤드 파일
 - PrjHomeWorkDlg.cpp: 프로젝트 소스 파일
 - CImageView.h     : 이미지 저장 및 표출 헤드 파일
-- CImageView.cpp   : 이ㅣ지 저장 및 표출 소스 파일
+- CImageView.cpp   : 이미지 저장 및 표출 소스 파일
   
