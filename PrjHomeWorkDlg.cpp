@@ -12,6 +12,7 @@
 
 #include<iostream>
 #include <math.h>    // for sqrt
+
 using namespace std;
 
 #ifdef _DEBUG
@@ -174,6 +175,8 @@ HCURSOR CPrjHomeWorkDlg::OnQueryDragIcon()
 void CPrjHomeWorkDlg::InitDlg()
 {
 	CRect rect;
+
+	m_ImageViewer = NULL;
 
 	/* Cimage Top 위치 */
 	GetDlgItem(IDC_GROUP)->GetWindowRect(&rect);
@@ -359,6 +362,11 @@ BOOL CPrjHomeWorkDlg::ReleaseDlg()
 		bRet = TRUE;
 
 	/*필요할 경우 동적 생성 변수를 제거하는 로직  */
+	if (m_ImageViewer != NULL)
+	{
+		delete m_ImageViewer;
+		m_ImageViewer = NULL;
+	}
 	
 	return bRet;
 }
@@ -367,8 +375,8 @@ BOOL CPrjHomeWorkDlg::ReleaseDlg()
 ======================================*/
 void CPrjHomeWorkDlg::OnBnClickedBtnMake()
 {
-	UpdateData(TRUE);
 	CString strMsg;
+	UpdateData(TRUE);
 
 	int nRadius = m_Ctl_nRadius;
 	int nMakeCnt = m_Ctl_nMakeCnt;
@@ -405,18 +413,18 @@ void CPrjHomeWorkDlg::OnBnClickedBtnClose()
 		PostMessage(WM_CLOSE, 0, 0);
 }
 /*======================================
-Cimage 저장
+Cimage 저장 및 표출
 ======================================*/
 void CPrjHomeWorkDlg::OnBnClickedBtnSave()
 {
-	CString g_strFileImage = _T(".\\save.bmp");
-	CString strMsg, strMsg2;
-
-	if (m_image) {
-		strMsg.LoadStringW(IDS_STR_SAVE);
-		strMsg2.Format(_T("%s %s"), g_strFileImage, strMsg);
-		m_image.Save(g_strFileImage);
-		AfxMessageBox(strMsg2);
+	if (m_ImageViewer == NULL)	{
+		m_ImageViewer = new CImageView;	
+		m_ImageViewer->Create(IDD_DLG_VIEW);
 	}
-		
+
+	if (m_ImageViewer != NULL  )
+	{
+		m_ImageViewer->ShowWindow(SW_SHOW);
+		m_ImageViewer->SaveDisplayFile(&m_image);
+	}	
 }

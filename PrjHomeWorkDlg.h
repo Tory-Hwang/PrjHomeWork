@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "CImageView.h"
 
 // CPrjHomeWorkDlg 대화 상자
 class CPrjHomeWorkDlg : public CDialogEx
@@ -16,6 +16,8 @@ protected:
 
 private:
 	CImage m_image;
+	CImageView* m_ImageViewer;
+	BOOL bImageViewerMaked;
 	int m_nImagePosY = 0;	
 
 	void InitDlg();
