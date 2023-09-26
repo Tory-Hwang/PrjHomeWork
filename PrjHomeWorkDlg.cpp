@@ -359,15 +359,16 @@ BOOL CPrjHomeWorkDlg::ReleaseDlg()
 
 	strMsg.LoadStringW(IDS_STR_CLOSE);
 	if (IDYES == AfxMessageBox(strMsg), MB_YESNO)
-		bRet = TRUE;
-
-	/*필요할 경우 동적 생성 변수를 제거하는 로직  */
-	if (m_ImageViewer != NULL)
 	{
-		delete m_ImageViewer;
-		m_ImageViewer = NULL;
+		bRet = TRUE;
+		/*필요할 경우 동적 생성 변수를 제거하는 로직  */
+		if (m_ImageViewer != NULL)
+		{
+			delete m_ImageViewer;
+			m_ImageViewer = NULL;
+		}
 	}
-	
+
 	return bRet;
 }
 /*======================================

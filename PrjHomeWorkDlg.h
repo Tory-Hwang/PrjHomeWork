@@ -17,7 +17,6 @@ protected:
 private:
 	CImage m_image;
 	CImageView* m_ImageViewer;
-	BOOL bImageViewerMaked;
 	int m_nImagePosY = 0;	
 
 	void InitDlg();
